@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light">
+<title>匿名意见箱</title>
+<meta name="description" content="匿名提交意见、建议或投诉。不收集 IP、Cookie、账号或设备信息。">
+<link rel="stylesheet" href="/assets/styles.css">
+<script src="/assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主内容</a>
+
+<header class="site-header">
+  <div class="container">
+    <p class="site-kicker label">匿名意见收集系统</p>
+    <h1 class="site-title">匿名意见箱</h1>
+    <p class="site-sub">写下你的意见、建议或问题。我们只处理内容本身，不记录你是谁。</p>
+  </div>
+</header>
+
+<main id="main" class="container stack" tabindex="-1">
+
+  <section class="notice" aria-labelledby="privacy-label">
+    <p class="label" id="privacy-label">隐私说明</p>
+    <ul class="notice-list">
+      <li>不收集 IP、User-Agent、Cookie、账号或设备信息；</li>
+      <li>提交时间仅保留 UTC 小时；</li>
+      <li>不设置任何 Cookie。</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="form-section" aria-labelledby="form-title">
+    <h2 class="section-title" id="form-title">提交意见</h2>
+
+    <form id="feedback-form" novalidate>
+      <div class="field">
+        <label class="field-label" for="content">意见内容</label>
+        <textarea id="content" name="content" class="field-input field-textarea"
+          maxlength="5000" required
+          aria-describedby="content-help content-counter"></textarea>
+        <div class="field-meta">
+          <p class="field-help" id="content-help">请勿填写姓名、电话等可识别身份的信息。</p>
+          <p class="counter" id="content-counter" aria-live="polite">已输入 0 / 5000</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="category">类别</label>
+        <select id="category" name="category" class="field-input field-select">
+          <option value="">不选择</option>
+          <option value="bug">缺陷</option>
+          <option value="suggestion">建议</option>
+          <option value="complaint">投诉</option>
+          <option value="other">其他</option>
+        </select>
+      </div>
+
+      <p class="form-error" id="form-error" role="alert" hidden></p>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-block" id="submit-btn">匿名提交</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel receipt" id="receipt" aria-labelledby="receipt-title" hidden>
+    <h2 class="section-title" id="receipt-title">提交成功</h2>
+    <p class="receipt-hint">请保存下面的回执 ID。它是查询这条意见的唯一凭据，请勿丢失。</p>
+    <p class="label">回执 ID</p>
+    <p class="receipt-id mono" id="receipt-id"></p>
+    <p class="receipt-time" id="receipt-time"></p>
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" id="copy-btn">复制回执 ID</button>
+      <button type="button" class="btn btn-secondary" id="again-btn">再提交一条</button>
+    </div>
+    <p class="inline-status" id="copy-status" role="status"></p>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>匿名意见收集系统 · 仅保存内容与 UTC 小时时间桶</p>
+  </div>
+</footer>
+
+</body>
+</html>

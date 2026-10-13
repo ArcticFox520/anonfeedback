@@ -1,0 +1,1072 @@
+/* ==========================================================================
+   匿名意见收集系统 — 样式表（提交页 + 管理页共用）
+   风格：瑞士栅格 / 编辑部式，1px 细线系统，黑白灰，无圆角，无外部资源。
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Tokens
+   -------------------------------------------------------------------------- */
+:root {
+  /* 调色板：只有黑、白、灰 */
+  --c-black: #000;
+  --c-ink: #111;
+  --c-ink-soft: #222;
+  --c-mid: #666;
+  --c-mute: #999;
+  --c-rule: #ddd;
+  --c-rule-soft: #eee;
+  --c-surface: #fff;
+  --c-surface-alt: #fafafa;
+
+  /* 间距刻度 */
+  --sp-1: 0.25rem;   /* 4  */
+  --sp-2: 0.5rem;    /* 8  */
+  --sp-3: 0.75rem;   /* 12 */
+  --sp-4: 1rem;      /* 16 */
+  --sp-5: 1.5rem;    /* 24 */
+  --sp-6: 2rem;      /* 32 */
+  --sp-7: 3rem;      /* 48 */
+  --sp-8: 4rem;      /* 64 */
+
+  /* 字体 */
+  --font-sans: system-ui, -apple-system, "Segoe UI", "Noto Sans SC",
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* 细线 */
+  --rule: 1px solid var(--c-ink);
+  --hairline: 1px solid var(--c-rule);
+  --hairline-soft: 1px solid var(--c-rule-soft);
+
+  /* 版式与节奏 */
+  --measure: 68ch;
+  --container: 1100px;
+  --dur: 120ms;
+  --tap: 44px;
+
+  /* 状态层级（仅供 stack 排序参考，避免随手写 z-index） */
+  --z-base: 1;
+  --z-sticky: 10;
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset（圆角恒为 0）
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+li,
+dl,
+dt,
+dd,
+figure,
+blockquote,
+form,
+fieldset,
+legend,
+label,
+table,
+caption,
+thead,
+tbody,
+tfoot,
+tr,
+th,
+td,
+button,
+input,
+select,
+textarea,
+section,
+article,
+header,
+footer,
+main,
+nav,
+aside,
+details,
+summary,
+output {
+  border-radius: 0;
+}
+
+/* 关键控件再次声明，防止 UA 样式带回圆角 */
+button,
+input,
+select,
+textarea,
+table,
+th,
+td,
+.card,
+.panel,
+.notice,
+.receipt,
+.btn {
+  border-radius: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--c-surface);
+  color: var(--c-ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* --------------------------------------------------------------------------
+   3. 排版
+   -------------------------------------------------------------------------- */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--c-black);
+}
+
+p {
+  max-width: var(--measure);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  display: block;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-mid);
+}
+
+.section-title {
+  font-size: 1.125rem;
+  letter-spacing: 0.01em;
+  font-weight: 800;
+  color: var(--c-black);
+}
+
+.muted {
+  color: var(--c-mid);
+}
+
+.small {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+hr,
+.rule {
+  border: 0;
+  border-top: var(--rule);
+  margin: var(--sp-5) 0;
+}
+
+.rule-hair {
+  border: 0;
+  border-top: var(--hairline);
+  margin: var(--sp-4) 0;
+}
+
+/* --------------------------------------------------------------------------
+   4. 布局容器
+   -------------------------------------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding-left: var(--sp-4);
+  padding-right: var(--sp-4);
+}
+
+main.container {
+  padding-top: var(--sp-6);
+  padding-bottom: var(--sp-7);
+}
+
+.stack > * + * {
+  margin-top: var(--sp-5);
+}
+
+
+/* 页头：大标题压在全宽 1px 黑线上 */
+.site-header {
+  border-bottom: 1px solid var(--c-black);
+  padding-top: var(--sp-6);
+  background: var(--c-surface);
+}
+
+.site-kicker {
+  margin-bottom: var(--sp-3);
+}
+
+.site-title {
+  font-size: clamp(2rem, 8vw, 3.25rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  margin: 0 0 var(--sp-3);
+}
+
+.site-sub {
+  color: var(--c-mid);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  max-width: 46ch;
+  margin: 0 0 var(--sp-5);
+}
+
+/* --------------------------------------------------------------------------
+   5. 面板 / 通知框（直角、细线，不做卡片阴影）
+   -------------------------------------------------------------------------- */
+.panel {
+  border: 1px solid var(--c-ink);
+  background: var(--c-surface);
+  padding: var(--sp-5) var(--sp-4);
+}
+
+.notice {
+  border: 1px solid var(--c-black);
+  background: var(--c-surface-alt);
+  padding: var(--sp-4);
+}
+
+.notice .label {
+  color: var(--c-black);
+  margin-bottom: var(--sp-3);
+}
+
+.notice-list li {
+  position: relative;
+  padding-left: var(--sp-4);
+  color: var(--c-ink-soft);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  max-width: var(--measure);
+}
+
+.notice-list li + li {
+  margin-top: var(--sp-2);
+}
+
+.notice-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 8px;
+  height: 1px;
+  background: var(--c-black);
+}
+
+/* --------------------------------------------------------------------------
+   6. 表单
+   -------------------------------------------------------------------------- */
+form {
+  margin-top: var(--sp-4);
+}
+
+.field + .field {
+  margin-top: var(--sp-5);
+}
+
+.field-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-black);
+  margin-bottom: var(--sp-2);
+}
+
+.field-input {
+  display: block;
+  width: 100%;
+  min-height: var(--tap);
+  padding: var(--sp-3);
+  font-family: inherit;
+  font-size: 1rem; /* >= 16px，避免 iOS 聚焦缩放 */
+  line-height: 1.5;
+  color: var(--c-ink);
+  background: var(--c-surface);
+  border: 1px solid var(--c-ink);
+  border-radius: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.field-input::placeholder {
+  color: var(--c-mute);
+}
+
+.field-textarea {
+  min-height: 11rem;
+  resize: vertical;
+}
+
+.field-select {
+  padding-right: var(--sp-6);
+  background-image: none;
+}
+
+.field-input:disabled,
+.field-input[aria-disabled="true"] {
+  background: var(--c-surface-alt);
+  color: var(--c-mid);
+  border-color: var(--c-rule);
+}
+
+.field-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: var(--sp-2);
+}
+
+.field-help {
+  color: var(--c-mid);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.counter {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--c-mid);
+  white-space: nowrap;
+}
+
+.counter.at-limit {
+  color: var(--c-black);
+  font-weight: 700;
+}
+
+.form-error,
+.inline-status,
+.field-error {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-top: var(--sp-3);
+  color: var(--c-black);
+  max-width: var(--measure);
+}
+
+.form-error {
+  border-left: 3px solid var(--c-black);
+  padding-left: var(--sp-3);
+}
+
+.form-error[hidden],
+.inline-status[hidden],
+[hidden] {
+  display: none !important;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-5);
+}
+
+/* --------------------------------------------------------------------------
+   7. 按钮
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap);
+  padding: 0 var(--sp-5);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid var(--c-black);
+  border-radius: 0;
+  background: var(--c-surface);
+  color: var(--c-black);
+  cursor: pointer;
+  transition: background-color var(--dur) linear, color var(--dur) linear,
+    border-color var(--dur) linear;
+}
+
+.btn-primary {
+  background: var(--c-black);
+  color: #fff;
+  border-color: var(--c-black);
+}
+
+.btn-secondary {
+  background: var(--c-surface);
+  color: var(--c-black);
+  border-color: var(--c-black);
+}
+
+.btn-quiet {
+  background: var(--c-surface);
+  color: var(--c-ink);
+  border-color: var(--c-rule);
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--c-surface);
+  color: var(--c-black);
+  border-color: var(--c-black);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--c-surface);
+  color: var(--c-black);
+}
+
+.btn:active:not(:disabled) {
+  background: var(--c-ink-soft);
+  color: #fff;
+  border-color: var(--c-ink-soft);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  background: var(--c-rule-soft);
+  color: var(--c-mute);
+  border-color: var(--c-rule);
+  cursor: not-allowed;
+}
+
+.btn-sm {
+  min-height: var(--tap);
+  padding: 0 var(--sp-4);
+  font-size: 0.8125rem;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+/* 明确可见的聚焦样式（不删除 outline） */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+summary:focus,
+[tabindex]:focus {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+[tabindex]:focus:not(:focus-visible) {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+a {
+  color: var(--c-black);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   8. 回执面板
+   -------------------------------------------------------------------------- */
+.receipt {
+  border: 1px solid var(--c-black);
+}
+
+.receipt-hint {
+  color: var(--c-mid);
+  font-size: 0.9375rem;
+  margin-top: var(--sp-2);
+  margin-bottom: var(--sp-4);
+}
+
+.receipt .label {
+  margin-bottom: var(--sp-2);
+}
+
+.receipt-id {
+  font-size: clamp(1.125rem, 5.5vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  color: var(--c-black);
+  word-break: break-all;
+  border-top: var(--rule);
+  border-bottom: var(--rule);
+  padding: var(--sp-4) 0;
+  margin-bottom: var(--sp-3);
+}
+
+.receipt-time {
+  font-size: 0.8125rem;
+  color: var(--c-mid);
+  font-family: var(--font-mono);
+}
+
+.copy-helper {
+  position: fixed;
+  top: 0;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+/* --------------------------------------------------------------------------
+   9. 管理页 — 令牌闸门
+   -------------------------------------------------------------------------- */
+.gate {
+  max-width: 30rem;
+}
+
+.gate .field {
+  margin-top: var(--sp-4);
+}
+
+.gate-hint {
+  margin-top: var(--sp-4);
+  color: var(--c-mid);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  border-top: var(--hairline);
+  padding-top: var(--sp-3);
+}
+
+/* --------------------------------------------------------------------------
+   10. 管理页 — 工具条 / 列表 / 分页
+   -------------------------------------------------------------------------- */
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  border-top: 1px solid var(--c-black);
+  border-bottom: var(--hairline);
+  padding: var(--sp-4) 0;
+}
+
+.toolbar-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  align-items: flex-end;
+}
+
+.toolbar-group--grow {
+  justify-content: space-between;
+}
+
+.toolbar-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  min-width: 10rem;
+}
+
+.toolbar-field .field-input {
+  min-height: var(--tap);
+}
+
+.total-count {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--c-mid);
+  white-space: nowrap;
+}
+
+/* 数据表（桌面：真实表格 + 细横线，无竖线） */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--c-surface);
+  text-align: left;
+}
+
+.data-table caption {
+  text-align: left;
+}
+
+.data-table th {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-mid);
+  padding: var(--sp-3) var(--sp-3);
+  border-bottom: 1px solid var(--c-black);
+  white-space: nowrap;
+  background: var(--c-surface);
+}
+
+.data-table td {
+  padding: var(--sp-3) var(--sp-3);
+  border-bottom: var(--hairline);
+  vertical-align: top;
+  font-size: 0.9375rem;
+  color: var(--c-ink);
+}
+
+.data-table tbody tr {
+  cursor: pointer;
+}
+
+.data-table tbody tr:hover {
+  background: var(--c-surface-alt);
+}
+
+.data-table tbody tr.is-selected {
+  background: var(--c-surface-alt);
+  box-shadow: inset 3px 0 0 0 var(--c-black);
+}
+
+.cell-id {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--c-ink);
+  white-space: nowrap;
+}
+
+.cell-excerpt {
+  min-width: 12rem;
+  max-width: 30rem;
+  color: var(--c-ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.cell-time {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--c-mid);
+  white-space: nowrap;
+}
+
+.cell-actions {
+  white-space: nowrap;
+}
+
+.status-code {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-black);
+  border: 1px solid var(--c-ink);
+  padding: 2px var(--sp-2);
+}
+
+.status-code[data-status="read"] {
+  background: var(--c-rule-soft);
+  border-color: var(--c-mid);
+  color: var(--c-ink);
+}
+
+.status-code[data-status="archived"] {
+  background: var(--c-surface);
+  border-color: var(--c-rule);
+  color: var(--c-mid);
+}
+
+.status-text {
+  font-size: 0.75rem;
+  color: var(--c-mid);
+  margin-left: var(--sp-2);
+  white-space: nowrap;
+}
+
+.empty-state {
+  border-bottom: var(--hairline);
+  padding: var(--sp-6) var(--sp-3);
+  color: var(--c-mid);
+  font-size: 0.9375rem;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+  padding-top: var(--sp-4);
+  border-top: var(--hairline);
+  margin-top: var(--sp-2);
+}
+
+.page-label {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--c-ink);
+}
+
+/* --------------------------------------------------------------------------
+   11. 管理页 — 详情面板
+   -------------------------------------------------------------------------- */
+.detail {
+  border: 1px solid var(--c-ink);
+  padding: var(--sp-5) var(--sp-4);
+  margin-top: var(--sp-5);
+}
+
+.detail-empty {
+  border: 1px dashed var(--c-rule);
+  color: var(--c-mid);
+  padding: var(--sp-5) var(--sp-4);
+  margin-top: var(--sp-5);
+  font-size: 0.9375rem;
+}
+
+.detail-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--c-black);
+  padding-bottom: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.detail-id {
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  word-break: break-all;
+  color: var(--c-black);
+}
+
+.detail-meta {
+  display: grid;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.detail-meta dt {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-mid);
+  margin-bottom: var(--sp-1);
+}
+
+.detail-meta dd {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--c-ink);
+  word-break: break-all;
+}
+
+.detail-content {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border: 1px solid var(--c-ink);
+  padding: var(--sp-4);
+  background: var(--c-surface-alt);
+  color: var(--c-ink);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  max-width: none;
+  margin-bottom: var(--sp-5);
+}
+
+.detail-block + .detail-block {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-4);
+  border-top: var(--hairline);
+}
+
+.status-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.status-buttons .btn[aria-pressed="true"] {
+  background: var(--c-black);
+  color: #fff;
+  border-color: var(--c-black);
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+
+.danger-zone {
+  border-top: 1px solid var(--c-black);
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-4);
+}
+
+.confirm-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  align-items: center;
+}
+
+/* --------------------------------------------------------------------------
+   12. 页脚 / 工具类
+   -------------------------------------------------------------------------- */
+.site-footer {
+  border-top: 1px solid var(--c-black);
+  padding: var(--sp-5) 0 var(--sp-6);
+  margin-top: var(--sp-7);
+  color: var(--c-mid);
+  font-size: 0.8125rem;
+}
+
+.site-footer p {
+  max-width: none;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--sp-4);
+  top: -100px;
+  z-index: var(--z-sticky);
+  background: var(--c-black);
+  color: #fff;
+  padding: var(--sp-3) var(--sp-4);
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.skip-link:focus {
+  top: var(--sp-2);
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   13. 移动端：表格 → 堆叠行（同一份 DOM，用 data-label 呈现表头）
+   -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  .data-table,
+  .data-table tbody,
+  .data-table tr,
+  .data-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .data-table thead {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .data-table tr {
+    border: 1px solid var(--c-ink);
+    border-bottom: 0;
+    padding: var(--sp-4);
+  }
+
+  .data-table tr:last-child {
+    border-bottom: 1px solid var(--c-ink);
+  }
+
+  .data-table td {
+    border-bottom: 0;
+    padding: 0 0 var(--sp-3);
+    max-width: none;
+  }
+
+  .data-table td:last-child {
+    padding-bottom: 0;
+  }
+
+  .data-table td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-mute);
+    margin-bottom: var(--sp-1);
+  }
+
+  .data-table tbody tr.is-selected {
+    box-shadow: inset 3px 0 0 0 var(--c-black);
+  }
+
+  .cell-excerpt {
+    max-width: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   14. 桌面增强
+   -------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+  .container {
+    padding-left: var(--sp-6);
+    padding-right: var(--sp-6);
+  }
+
+  main.container {
+    padding-top: var(--sp-7);
+  }
+
+  .panel {
+    padding: var(--sp-6);
+  }
+
+  .notice {
+    padding: var(--sp-5) var(--sp-6);
+  }
+
+  .site-header {
+    padding-top: var(--sp-7);
+  }
+
+  .site-sub {
+    font-size: 1rem;
+  }
+
+  .toolbar {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .detail {
+    padding: var(--sp-6);
+  }
+
+  .detail-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form-actions .btn-block {
+    width: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .detail-meta {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   15. 偏好设置
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .btn,
+  .toolbar,
+  .pagination {
+    display: none;
+  }
+}
