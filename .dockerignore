@@ -1,0 +1,12 @@
+.git
+.github
+build
+build-*
+data
+*.db
+*.db-wal
+*.db-shm
+.env
+*.o
+compile_commands.json
+README.md

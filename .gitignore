@@ -1,0 +1,11 @@
+build/
+build-*/
+data/
+*.db
+*.db-wal
+*.db-shm
+*.o
+*.a
+compile_commands.json
+.cache/
+.env
