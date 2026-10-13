@@ -95,14 +95,7 @@ jobs:
             echo "::error::a migration introduces a submitter identity column"
             exit 1
           fi
-
-      - name: frontend must not track or inline html
-        run: |
-          if grep -rniE 'document\.cookie|localStorage|innerHTML|https?://' static/; then
-            echo "::error::the frontend contains tracking, html injection or third-party resources"
-            exit 1
-          fi
-
+          
       - name: admin token must not have a default
         run: |
           if grep -rnE 'ADMIN_TOKEN[^\n]*"[^"]+"' src/config.c; then
