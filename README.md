@@ -307,6 +307,8 @@ compose 默认只把端口发布到 `127.0.0.1`，并启用 `read_only`、`tmpfs
 
 镜像名固定为 `<DOCKERHUB_USERNAME>/anonfeedback`，标签由 `docker/metadata-action` 生成（分支名、`v*` 语义化版本、默认分支的 `latest`）。PR 只构建不推送。
 
+原生 arm64 构建使用 GitHub 托管的 `ubuntu-24.04-arm` runner（公开仓库默认可用；私有仓库需相应套餐支持，否则可把该矩阵项改为在 amd64 上交叉编译或仅保留 QEMU 多架构镜像构建）。
+
 ---
 
 ## 10. 设计假设
