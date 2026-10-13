@@ -330,6 +330,11 @@ int db_insert_feedback(db_t *db, const char *id, const char *content, const char
     int rc;
     int result = -1;
 
+    /* Reject any timestamp finer than the UTC hour. */
+    if (!hour_bucket_valid(created_at_bucket)) {
+        log_error("refused to store a timestamp that is not an hour bucket");
+        return -1;
+    }
     (void)lock_db(db);
     rc = sqlite3_prepare_v2(db->handle,
                             "INSERT INTO feedback (id, content, category, status, admin_note, "

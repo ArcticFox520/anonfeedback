@@ -27,7 +27,6 @@ int utf8_valid(const char *data, size_t len);
 size_t utf8_count(const char *data, size_t len);
 
 int constant_time_equals(const char *a, const char *b);
-void sha256_hex(const void *data, size_t len, char out[65]);
 
 const char *category_canonical(const char *value);
 int category_valid(const char *value);

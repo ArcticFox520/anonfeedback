@@ -10,7 +10,6 @@
 #include <uuid/uuid.h>
 
 #include <openssl/crypto.h>
-#include <openssl/evp.h>
 #include <openssl/sha.h>
 
 static void die_oom(void)
@@ -276,21 +275,6 @@ int constant_time_equals(const char *a, const char *b)
     secure_zero(da, sizeof(da));
     secure_zero(db, sizeof(db));
     return equal;
-}
-
-void sha256_hex(const void *data, size_t len, char out[65])
-{
-    static const char hex[] = "0123456789abcdef";
-    unsigned char digest[SHA256_DIGEST_LENGTH];
-    size_t i;
-
-    (void)SHA256((const unsigned char *)data, len, digest);
-    for (i = 0; i < sizeof(digest); i++) {
-        out[i * 2] = hex[digest[i] >> 4];
-        out[i * 2 + 1] = hex[digest[i] & 0x0F];
-    }
-    out[64] = '\0';
-    secure_zero(digest, sizeof(digest));
 }
 
 const char *category_canonical(const char *value)

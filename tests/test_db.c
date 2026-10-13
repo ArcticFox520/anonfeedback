@@ -149,7 +149,11 @@ static void test_constraints_and_injection(const char *migrations_dir)
 
     /* Invalid enum values are rejected by the schema. */
     CHECK(db_insert_feedback(&db, id, "body", "invalid", "2026-05-01T14:00:00Z") == -1);
-    CHECK(db_insert_feedback(&db, id, "body", "bug", "not-a-bucket") == 0);
+    CHECK(db_insert_feedback(&db, id, "body", "bug", "not-a-bucket") == -1);
+
+    /* A precise submit time can never reach storage. */
+    CHECK(db_insert_feedback(&db, id, "body", "bug", "2026-05-01T14:23:45Z") == -1);
+    CHECK(db_insert_feedback(&db, id, "body", "bug", NULL) == -1);
 
     /* Parameter binding keeps hostile content inert. */
     uuid_v4(id);

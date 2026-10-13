@@ -95,14 +95,6 @@ static void test_constant_time(void)
     CHECK(!constant_time_equals("x", NULL));
 }
 
-static void test_sha256(void)
-{
-    char hex[65];
-
-    sha256_hex("abc", 3, hex);
-    CHECK_STR_EQ(hex, "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
-}
-
 static void test_enums(void)
 {
     CHECK_STR_EQ(category_canonical("bug"), "bug");
@@ -156,7 +148,6 @@ int main(void)
     test_time();
     test_uuid();
     test_constant_time();
-    test_sha256();
     test_enums();
     test_parse_int();
     test_html_escape();

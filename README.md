@@ -21,12 +21,12 @@
 | 数据库无身份字段 | `feedback` 表只有 id / content / category / status / admin_note / created_at_bucket / updated_at；启动时 `db_privacy_check()` 扫描列名，命中 `ip`、`user_agent`、`cookie`、`referer`、`session`、`device`、`fingerprint`、`token` 即拒绝启动 |
 | 日志不含请求体 / 意见内容 / IP / Authorization | 请求日志只输出 `method path status`；libmicrohttpd 的内部日志通过 `MHD_OPTION_EXTERNAL_LOGGER` 全部丢弃（其消息可能带对端地址） |
 | 不设置 Cookie | 不产生任何 `Set-Cookie`；前端不使用 `document.cookie` |
-| 时间只存 UTC 小时桶 | `created_at_bucket` 形如 `2026-05-01T14:00:00Z`，由 `hour_bucket_utc()` 生成并校验格式 |
+| 时间只存 UTC 小时桶 | `created_at_bucket` 形如 `2026-05-01T14:00:00Z`，由 `hour_bucket_utc()` 生成；`db_insert_feedback()` 在写入前用 `hour_bucket_valid()` 复核，任何精确到分钟/秒的时间都会被数据层拒绝 |
 | 限流可用 IP 哈希，但只在内存、短 TTL、不落库、不写日志 | `ratelimit.c` 用 `HMAC-SHA256(salt, address)` 作为键，盐来自 `RATE_LIMIT_SALT`，未配置则每次启动用 `RAND_bytes` 随机生成；条目按窗口过期后被清零释放，从不写入数据库或日志 |
 | 管理端认证 `Authorization: Bearer <ADMIN_TOKEN>`，只来自环境变量 | `config.c` 只从 `getenv("ADMIN_TOKEN")` 读取，无硬编码默认值 |
 | ADMIN_TOKEN 未配置则启动失败 | `config_load()` 返回错误并退出码 1；少于 16 字符、含空白或明显弱口令同样拒绝启动 |
 | 常量时间比较 | 先将两个令牌各自 SHA-256，再用 `CRYPTO_memcmp` 比较定长摘要，避免长度与提前返回泄漏 |
-| 输出转义防 XSS | 前端所有服务端文本使用 `textContent` / `createTextNode` 写入（无任何 `innerHTML`），并配合 `Content-Security-Policy: default-src 'self'` 与 `X-Content-Type-Options: nosniff` |
+| 输出转义防 XSS | 服务端只输出 JSON，绝不渲染 HTML；前端所有服务端文本使用 `textContent` / `createTextNode` 写入（无任何 `innerHTML`），并配合 `Content-Security-Policy: default-src 'self'` 与 `X-Content-Type-Options: nosniff`；`html_escape_dup()` 作为经过测试的转义工具保留，供未来任何 HTML 渲染路径使用 |
 | 不放宽 CORS | 不返回任何 `Access-Control-Allow-*` 头，浏览器按同源策略执行 |
 | 请求体大小限制 64KB | `MAX_BODY_BYTES` 默认 65536，超出返回 `413 PAYLOAD_TOO_LARGE`，同时用 `MHD_OPTION_CONNECTION_MEMORY_LIMIT` 限制连接缓冲 |
 | 管理端接口统一鉴权 | `route_admin()` 是 `/api/v1/admin/` 前缀的唯一入口，先限流再校验令牌，无法绕过 |
